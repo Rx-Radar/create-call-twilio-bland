@@ -1,0 +1,2 @@
+EXT_CVS="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww1wwwwwwwwwwwwwwwwwwwwww7wwwwwwwwwwwwww2"
+EXT_TEST="wwww2wwww2"
