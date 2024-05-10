@@ -25,7 +25,6 @@ def main(request):
     
     #pass in pharm name as we will use this for extensions later
     try:
-        
         request_json = request.get_json()
         
         call_uuid = request_json["call_uuid"]
@@ -54,8 +53,8 @@ def main(request):
         # TwiML
         twiml = f"""
         <Response>
-            <Play digits="{PM.EXT_CVS}"></Play>
-            <Redirect>https://us-central1-rxradar.cloudfunctions.net/transfer-twilio-bland?{query_string}</Redirect>
+            <Play digits="{PM.EXT_TEST}"></Play>
+            <Redirect>https://us-central1-rxradar.cloudfunctions.net/dev-transfer-twilio-bland?{query_string}</Redirect>
         </Response>
         """
 
