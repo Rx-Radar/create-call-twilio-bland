@@ -9,7 +9,7 @@ steps:
     args:
       - 'functions'
       - 'deploy'
-      - 'create-call-twilio-bland'  # Replace with your function name
+      - 'dev-create-call-twilio-bland'  # Replace with your function name
       - '--entry-point'
       - 'main'  # Replace with your function's entry point
       - '--runtime'
