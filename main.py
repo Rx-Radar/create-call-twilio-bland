@@ -3,11 +3,27 @@ from util import pharmacy_map as PM
 from urllib.parse import quote
 from twilio.rest import Client
 from flask import jsonify
+import yaml
+import os
+
+def load_yaml_file(filepath):
+    with open(filepath, 'r') as file:
+        data = yaml.safe_load(file)
+    return data
+
+# Use the function to load the configuration
+config = load_yaml_file('config.yaml')
+
+env = os.getenv("deployment_env")
 
 # initialize twilio client for SMS
-ACCOUNT_SID = 'AC3d433258fe9b280b01ba83afe272f438'
-AUTH_TOKEN = '2cc106ae7b360c99a7be11cc4ea77c07'
-twilio_client = Client(ACCOUNT_SID, AUTH_TOKEN)
+TWILIO_ACCOUNT_SID = config[env]["twilio"]["account_sid"] 
+TWILIO_AUTH_TOKEN = config[env]["twilio"]["auth_token"] 
+TWILIO_PHONE_NUMBER = config[env]["twilio"]["phone_number"] 
+
+CF_TRANSFER_CALL = config[env]["cloud_functions"]["transfer_call"]
+
+twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 """
 {
@@ -25,7 +41,6 @@ def main(request):
     
     #pass in pharm name as we will use this for extensions later
     try:
-        
         request_json = request.get_json()
         
         call_uuid = request_json["call_uuid"]
@@ -55,28 +70,19 @@ def main(request):
         twiml = f"""
         <Response>
             <Play digits="{PM.EXT_CVS}"></Play>
-            <Redirect>https://us-central1-rxradar.cloudfunctions.net/transfer-twilio-bland?{query_string}</Redirect>
+            <Redirect>{CF_TRANSFER_CALL}?{query_string}</Redirect>
         </Response>
-        """
-
-        """
-        Note: in cloud function, extract url params like:
-            name = request.args.get('name')
-            dosage = request.args.get('dosage')
-            brand = request.args.get('brand')
-            quantity = request.args.get('quantity')
-            medication_type = request.args.get('type')
         """
 
         twilio_client.calls.create(
             twiml=twiml,  # TwiML content as URL data
             to=pharm_phone,
-            from_='+18337034125'
+            from_= TWILIO_PHONE_NUMBER
         )
         # call plased succesfully
         return jsonify({'message': 'Successfully started call.'}), 200
     except Exception as e:
-        print({"error": "Failed while placing hte call ", "exception": str(e)})
+        print({"error": "Failed while placing the call ", "exception": str(e)})
         return jsonify({'error': 'Calling pharmacies Failed', 'exception': str(e)}), 500
    
 
