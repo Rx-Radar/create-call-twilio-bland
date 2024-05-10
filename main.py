@@ -53,7 +53,7 @@ def main(request):
         pharm_phone = request_json["pharm_phone"]
         
         parameters = {
-            "call_uuid": call_uuid, # pass the uuid, this will become metadata on the actual request
+            "call_uuid": call_uuid, # pass the uuid, this will become metadata on the actual request 
             "request_uuid": request_uuid,
             "name": name,
             "dosage": dosage,
