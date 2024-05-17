@@ -75,6 +75,7 @@ def main(request):
         """
 
         twilio_client.calls.create(
+            record=True,
             twiml=twiml,  # TwiML content as URL data
             to=pharm_phone,
             from_= TWILIO_PHONE_NUMBER
